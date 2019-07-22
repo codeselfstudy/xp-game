@@ -1,4 +1,7 @@
+declare var io: any;
+
 interface Canvas {
+
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D
 }
@@ -19,6 +22,11 @@ interface Entity {
 }
 
 export function initialize(){
+    var socket = io('http://localhost:5000');
+    socket.on('connect', () => {
+        console.log(socket);
+        socket.emit('json', {data: 'I\'m connected!'});
+    });
     const canvas = <HTMLCanvasElement>document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const world: World = {
@@ -111,3 +119,4 @@ function handleInput(event: KeyboardEvent): Action | undefined {
     }
     return undefined;
 };
+
