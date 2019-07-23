@@ -1,6 +1,7 @@
+import { sendMessage } from "./server.js";
 declare var io: any;
 
-interface Canvas {
+type Canvas = {
 
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D
@@ -8,13 +9,13 @@ interface Canvas {
 
 type Action = "Up" | "Down" | "Left" | "Right";
 
-interface World {
+type World = {
     scale: number;
     entities: Entity[];
     input?: Action;
 }
 
-interface Entity {
+type Entity = {
     x: number,
     y: number,
     color?: string
@@ -23,10 +24,7 @@ interface Entity {
 
 export function initialize(){
     var socket = io('http://localhost:5000');
-    socket.on('connect', () => {
-        console.log(socket);
-        socket.emit('json', {data: 'I\'m connected!'});
-    });
+    socket.on('connect', () => sendMessage(socket, "connected"));
     const canvas = <HTMLCanvasElement>document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const world: World = {
@@ -37,8 +35,7 @@ export function initialize(){
             {x: 10, y: 10},
         ]
     };
-
-    document.addEventListener("keydown", (e) => { world.input = handleInput(e) }, false);
+    document.addEventListener("keydown", (e) => { sendMessage(socket, handleInput(e)) }, false);
     setInterval(() => update({canvas, ctx}, world), 200);
 }
 
@@ -120,3 +117,5 @@ function handleInput(event: KeyboardEvent): Action | undefined {
     return undefined;
 };
 
+
+window.addEventListener('load', () => initialize())
