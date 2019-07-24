@@ -2,7 +2,6 @@ import { sendMessage } from "./server.js";
 declare var io: any;
 
 type Canvas = {
-
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D
 }
@@ -12,14 +11,12 @@ type Action = "Up" | "Down" | "Left" | "Right";
 type World = {
     scale: number;
     entities: Entity[];
-    input?: Action;
 }
 
 type Entity = {
     x: number,
     y: number,
     color?: string
-    controlled?: boolean
 }
 
 export function initialize(){
@@ -29,14 +26,17 @@ export function initialize(){
     const ctx = canvas.getContext('2d');
     const world: World = {
         scale: 50,
-        entities: [
-            {x: 0, y: 0, color: "blue", controlled: true},
-            {x: 2, y: 5},
-            {x: 10, y: 10},
-        ]
+        entities: []
     };
     document.addEventListener("keydown", (e) => { sendMessage(socket, handleInput(e)) }, false);
-    setInterval(() => update({canvas, ctx}, world), 200);
+    socket.on('world', (state) => {
+        let entities = Object.keys(state.entities).map(e=> ({
+            x: state.entities[e][0], y: state.entities[e][1],
+            color: socket.id == e ? "blue" : undefined
+        }));
+        world.entities = entities;
+    });
+    setInterval(() => update({canvas, ctx}, world), 100);
 }
 
 function update(c: Canvas, world: World) {
@@ -44,11 +44,7 @@ function update(c: Canvas, world: World) {
     drawGrid(c, world.scale);
     world.entities.forEach((e) => {
         draw(c, e, world.scale);
-        if(e.controlled){
-            move(e, world.input)
-        }
     })
-    world.input = undefined;
 }
 
 function drawGrid(c: Canvas, scale: number){
@@ -82,25 +78,6 @@ function draw(c: Canvas, thing: Entity, scale: number){
     c.ctx.fillStyle = thing.color || "red";
     c.ctx.fill();
     c.ctx.closePath();
-}
-
-function move(transform: Entity, action: Action){
-    switch(action){
-        case "Left":
-            transform.x--;
-            break;
-        case "Right":
-            transform.x++;
-            break;
-        case "Up":
-            transform.y--;
-            break;
-        case "Down":
-            transform.y++;
-            break;
-        default:
-            break;
-    }
 }
 
 function handleInput(event: KeyboardEvent): Action | undefined {

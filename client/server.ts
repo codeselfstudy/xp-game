@@ -1,3 +1,3 @@
 export function sendMessage(socket: any, message: string){
-    socket.emit('json', {action: message});
+    socket.emit('action', {action: message});
 }
