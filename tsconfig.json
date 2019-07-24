@@ -3,7 +3,7 @@
     "sourceMap": true,
     "target": "es6",
     "module": "es6",
-    "outDir": "./dist/"
+    "outDir": "./static/dist/"
   },
   "include": [
         "./client/**/*"
