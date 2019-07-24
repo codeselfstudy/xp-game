@@ -1,5 +1,5 @@
 import uuid
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_socketio import SocketIO, emit
 
 
@@ -11,9 +11,18 @@ game_state = {
     'entities': {}
 }
 
+
+@app.route('/')
+def homepage():
+    """Render the index.html file that contains the frontend application."""
+    return render_template('index.html')
+
+
+
 @socketio.on('message')
 def handle_message(message):
     print('received message: ' + message)
+
 
 @socketio.on('action')
 def handle_action(message):
@@ -36,21 +45,20 @@ def handle_action(message):
 def handle_connect():
     game_state['entities'][request.sid] = [0,0]
     broadcast_state()
-    
 
 
 @socketio.on('disconnect')
 def handle_disconnect():
     del game_state['entities'][request.sid]
     broadcast_state
-    
+
 
 def broadcast_state():
     print(game_state)
     socketio.emit('world', game_state)
-    
+
 
 if __name__ == '__main__':
     print("running")
-    socketio.run(app)
+    socketio.run(app, use_reloader=True)
 

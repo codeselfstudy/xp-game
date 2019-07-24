@@ -1,1 +1,21 @@
-dist/
+# The compiled JavaScript
+/static/dist/
+
+# Editors
+*~
+tags
+tags.*
+.idea/
+.vscode/
+*.sw[op]
+
+# Python
+*.py[cod]
+__pycache__/
+.venv/
+
+# Node
+node_modules/
+
+# Ruby
+/.bundle
