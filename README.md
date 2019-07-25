@@ -5,7 +5,7 @@
 
 ## Installation and usage (for Mac)
 
-- `npm install -g typescript` install typescript (if not already installed)
+- `sudo npm install -g typescript` install typescript (if not already installed)
 - `virtualenv xp-game` to set up virtual environment
 - `source xp-game/bin/activate` to activate and run environment
 - `pip install -r requirements.txt` to install server dependencies
