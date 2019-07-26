@@ -1,15 +1,13 @@
-import uuid
+import time
+from threading import Thread
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO, emit
+import server.ticker as ticker
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'notarealsecret'
-socketio = SocketIO(app)
-
-game_state = {
-    'entities': {}
-}
+socketio = SocketIO(app, async_mode='gevent')
 
 
 @app.route('/')
@@ -28,36 +26,25 @@ def handle_action(message):
     if 'action' not in message:
         return
     action = message['action']
-    entity = game_state['entities'][request.sid]
-    if action == 'Left':
-        entity[0] -= 1
-    if action == 'Right':
-        entity[0] += 1
-    if action == 'Up':
-        entity[1] -= 1
-    if action == 'Down':
-        entity[1] += 1
-    broadcast_state()
+    client_id = request.sid
+    ticker.enqueue_action(client_id, action)
 
 
 @socketio.on('connect')
 def handle_connect():
-    game_state['entities'][request.sid] = [0,0]
-    broadcast_state()
+    ticker.client_connect(request.sid)
 
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    del game_state['entities'][request.sid]
-    broadcast_state
+    ticker.client_disconnect(request.sid)
 
 
-def broadcast_state():
-    print(game_state)
-    socketio.emit('world', game_state)
-
-
+DEBUG_HOST = '127.0.0.1'
+DEBUG_PORT = 5000
 if __name__ == '__main__':
-    print("running")
-    socketio.run(app, use_reloader=True)
+    print(f"Starting server at {DEBUG_HOST}:{DEBUG_PORT}")
+    socketio.start_background_task(ticker.run_ticker, socketio)
+    socketio.run(app, use_reloader=True, debug=True, log_output=True,
+                 host=DEBUG_HOST, port=DEBUG_PORT)
 
