@@ -35,11 +35,12 @@ def broadcast_state(socket_server):
 
 
 def process_tick():
-    actions = []
+    actions = {}
     while not action_queue.empty():
-        actions.append(action_queue.get(block=True))
+        a = action_queue.get(block=True)
+        actions[a.client_id] = a
 
-    for a in actions:
+    for a in actions.values():
         entity = game_state['entities'][a.client_id]
         if a.action == 'Left':
             entity[0] -= 1

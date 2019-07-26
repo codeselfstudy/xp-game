@@ -42,7 +42,7 @@ DEBUG_HOST = '127.0.0.1'
 DEBUG_PORT = 5000
 if __name__ == '__main__':
     print(f"Starting server at {DEBUG_HOST}:{DEBUG_PORT}")
-    socketio.start_background_task(ticker.run_ticker)
+    socketio.start_background_task(ticker.run_ticker, socketio)
     socketio.run(app, use_reloader=True, debug=True, log_output=True,
                  host=DEBUG_HOST, port=DEBUG_PORT)
 
