@@ -41,7 +41,9 @@ def process_tick():
         actions[a.client_id] = a
 
     for a in actions.values():
-        entity = game_state['entities'][a.client_id]
+        entity = game_state['entities'].get(a.client_id)
+        if not entity:
+            continue
         if a.action == 'Left':
             entity[0] -= 1
         if a.action == 'Right':
