@@ -20,3 +20,4 @@ node_modules/
 
 # Ruby
 /.bundle
+.DS_Store
