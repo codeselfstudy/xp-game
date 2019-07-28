@@ -84,7 +84,6 @@ function drawGrid(c: Canvas, viewOffset: Vector, width: number, height: number, 
             drawGridline(0, n, c.canvas.width, n);
         }
         let localN = Vec.add(vector((n/scale)-1, (n/scale)-1), viewOffset);
-        console.log(n/scale, localN);
         if(localN.x < 0 || localN.x >= width){
             drawBounds(n-scale, 0, scale, c.canvas.height);
         }
