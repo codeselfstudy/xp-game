@@ -2,13 +2,13 @@ import queue
 import time
 from .domain import Entity, World, Action, Vector, to_dict
 
-TICK_INTERVAL = 1
+TICK_INTERVAL = 0.5
 
 action_queue = queue.Queue()
 
 game_state = World(
-    width=500,
-    height=500,
+    width=5,
+    height=5,
     entities=[]
 )
 
@@ -52,7 +52,6 @@ def process_tick():
             entity.position.y -= 1
         if a.action == 'Down' and entity.position.y < game_state.height - 1:
             entity.position.y += 1
-        print(entity.position)
 
 
 def run_ticker(socket_server):
