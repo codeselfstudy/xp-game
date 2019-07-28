@@ -1,4 +1,7 @@
 import { sendMessage } from "./server.js";
+import { Vector, vector } from "./vectors.js"
+import * as Vec from "./vectors.js"
+
 declare var io: any;
 
 type Canvas = {
@@ -8,7 +11,6 @@ type Canvas = {
 
 type Action = "Up" | "Down" | "Left" | "Right";
 
-type Vector = { x: number, y: number }
 
 type World = {
     width: number;
@@ -23,11 +25,7 @@ type Entity = {
 
 export function initialize(){
     var socket = io('http://localhost:5000');
-    let clientId: string;
-    socket.on('connect', () => {
-        sendMessage(socket, "connected")
-        clientId = socket.id;
-    });
+    socket.on('connect', () => {sendMessage(socket, "connected")});
     let scale = 50;
     const canvas = <HTMLCanvasElement>document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
@@ -37,17 +35,26 @@ export function initialize(){
         entities: []
     };
     document.addEventListener("keydown", (e) => { sendMessage(socket, handleInput(e)) }, false);
-    socket.on('world', (state: World) => { world = state; });
-    setInterval(() => update({canvas, ctx}, world, scale), 100, clientId);
+    socket.on('world', (state: World) => {
+        world = state;
+        update({canvas, ctx}, world, scale, socket.id);
+    });
 }
 
 function update(c: Canvas, world: World, scale: number, clientId?: string) {
     c.ctx.clearRect(0,0, c.canvas.width, c.canvas.height);
     drawGrid(c, scale);
+    let player = world.entities.find(e=> e.client_id == clientId);
+    let viewCenter = vector(4,3);
+    let cameraWorld = player ? player.position : viewCenter;
+    let viewOffset = Vec.subtract(cameraWorld, viewCenter);
     world.entities.forEach((e) => {
-        draw(c, e, scale, clientId);
-    })
+            let localPos = Vec.subtract(e.position, viewOffset);
+            let color = clientId == e.client_id ? "blue" : "red";
+            draw(c, localPos, color, scale);
+        });
 }
+
 
 function drawGrid(c: Canvas, scale: number){
     function drawGridline(x1: number, y1: number, x2: number, y2: number){
@@ -74,11 +81,11 @@ function drawGrid(c: Canvas, scale: number){
     }
 }
 
-function draw(c: Canvas, thing: Entity, scale: number, clientId: string){
+function draw(c: Canvas, position: Vector, color: string, scale: number){
     c.ctx.beginPath()
-    c.ctx.rect(thing.position.x*scale, thing.position.y*scale,
+    c.ctx.rect(position.x*scale, position.y*scale,
                scale, scale);
-    c.ctx.fillStyle = clientId == thing.client_id ? "blue" : "red";
+    c.ctx.fillStyle = color;
     c.ctx.fill();
     c.ctx.closePath();
 }

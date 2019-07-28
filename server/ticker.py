@@ -52,6 +52,7 @@ def process_tick():
             entity.position.y -= 1
         if a.action == 'Down' and entity.position.y < game_state.height - 1:
             entity.position.y += 1
+        print(entity.position)
 
 
 def run_ticker(socket_server):
