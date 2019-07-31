@@ -1,5 +1,10 @@
 import { sendAction, sendChatMessage } from './server.js';
-import { chatData, formatMessage, printMessage } from './chat.js';
+import {
+    chatData,
+    formatMessage,
+    printMessage,
+    initializeChatListener,
+} from './chat.js';
 declare var io: any;
 
 type Canvas = {
@@ -49,27 +54,12 @@ export function initialize() {
     });
     setInterval(() => update({ canvas, ctx }, world, scale), 100, clientId);
 
-    // load chat messages (dummy data for now)
+    // load chat messages from the initial data (if any)
     const chatMessages: HTMLElement[] = chatData.map(msg => formatMessage(msg));
     chatMessages.forEach(msg => printMessage(msg));
 
     // Send chat messages
-    const chatForm = document.getElementById('chatForm');
-    chatForm.addEventListener('submit', (e): void => {
-        e.preventDefault();
-        const chatMessageInput = <HTMLInputElement>(
-            document.getElementById('chatMessageInput')
-        );
-        const chatMessage: string = chatMessageInput.value.trim();
-        chatMessageInput.value = '';
-        console.log('got message:', chatMessage);
-        sendChatMessage(socket, chatMessage);
-    });
-    socket.on('chat', message => {
-        console.log('from server', message);
-        const messageHtml = formatMessage(message);
-        printMessage(messageHtml)
-    });
+    initializeChatListener(socket);
 }
 
 function update(c: Canvas, world: World, scale: number, clientId?: string) {
