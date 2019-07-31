@@ -1,40 +1,11 @@
+import { sendChatMessage } from './server';
+
 interface Message {
     id: string;
-    text: string;
+    body: string;
 }
-console.log('here');
-const dummyData: Message[] = [
-    {
-        id: 'Frodo',
-        text:
-            'Ipsum iure laboriosam necessitatibus accusantium dolorum vero. Tempora repudiandae fugiat itaque temporibus sapiente. Iusto libero sapiente iste minima provident Dolore quis quia qui eveniet aliquid Totam quo debitis saepe harum?',
-    },
-    {
-        id: 'Bilbo',
-        text:
-            'Ipsum iure laboriosam necessitatibus accusantium dolorum vero. Tempora repudiandae fugiat itaque temporibus sapiente. Iusto libero sapiente iste minima provident Dolore quis quia qui eveniet aliquid Totam quo debitis saepe harum?',
-    },
-    {
-        id: 'Frodo',
-        text:
-            'Ipsum iure laboriosam necessitatibus accusantium dolorum vero. Tempora repudiandae fugiat itaque temporibus sapiente. Iusto libero sapiente iste minima provident Dolore quis quia qui eveniet aliquid Totam quo debitis saepe harum?',
-    },
-    {
-        id: 'Bilbo',
-        text:
-            'Ipsum iure laboriosam necessitatibus accusantium dolorum vero. Tempora repudiandae fugiat itaque temporibus sapiente. Iusto libero sapiente iste minima provident Dolore quis quia qui eveniet aliquid Totam quo debitis saepe harum?',
-    },
-    {
-        id: 'Frodo',
-        text:
-            'Ipsum iure laboriosam necessitatibus accusantium dolorum vero. Tempora repudiandae fugiat itaque temporibus sapiente. Iusto libero sapiente iste minima provident Dolore quis quia qui eveniet aliquid Totam quo debitis saepe harum?',
-    },
-    {
-        id: 'Bilbo',
-        text:
-            'Ipsum iure laboriosam necessitatibus accusantium dolorum vero. Tempora repudiandae fugiat itaque temporibus sapiente. Iusto libero sapiente iste minima provident Dolore quis quia qui eveniet aliquid Totam quo debitis saepe harum?',
-    },
-];
+
+const chatData: Message[] = [];
 
 /**
  * Take in a `Message` object and return an HTML string.
@@ -45,7 +16,7 @@ const formatMessage = (data: Message): HTMLElement => {
     div.innerHTML = `
         <span class="username">${data.id.slice(
             -5
-        )}</span> <span class="message-text">${data.text}</span>
+        )}</span> <span class="message-body">${data.body}</span>
     `;
     return div;
 };
@@ -58,4 +29,5 @@ const printMessage = (message): void => {
     messageOutputArea.appendChild(message);
 };
 
-export { dummyData, formatMessage, printMessage };
+
+export { chatData, formatMessage, printMessage };
