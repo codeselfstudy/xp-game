@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8"/>
         <title>Experience Points</title>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+        <script src="/static/vendor/socket.io.js"></script>
         <script src="/static/dist/server.js" type="module"></script>
         <script src="/static/dist/app.js" type="module"></script>
         <style>
@@ -20,8 +20,8 @@
         <div id="chat">
             <div class="messages" id="messages"></div>
 
-            <form class="chat-form">
-                <input type="text" placeholder="Enter a message">
+            <form id="chatForm" class="chat-form">
+                <input type="text" id="chatMessageInput" placeholder="Enter a chat message">
                 <input type="submit" value="Send">
             </form>
         </div>
