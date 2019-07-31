@@ -1,11 +1,9 @@
 {
-  "compilerOptions": {
-    "sourceMap": true,
-    "target": "es6",
-    "module": "es6",
-    "outDir": "./static/dist/"
-  },
-  "include": [
-        "./client/**/*"
-    ]
+    "compilerOptions": {
+        "sourceMap": true,
+        "target": "es5",
+        "module": "es6",
+        "outDir": "./static/dist/"
+    },
+    "include": ["./client/**/*"]
 }

@@ -1,0 +1,36 @@
+#chat {
+    outline: #ccc 1px solid;
+    padding: 7px;
+    height: 400px;
+    width: 480px;
+    margin: 17px auto;
+    font-family: monospace;
+    color: #333;
+}
+.messages {
+    /* outline: blue 1px solid; */
+    height: 350px;
+    overflow: auto;
+}
+.chat-form {
+    /* outline: green 1px solid; */
+    position: relative;
+    height: 50px;
+}
+.chat-form input {
+    height: 48px;
+}
+.chat-form input[type="text"] {
+    width: 400px;
+    padding-left: 7px;
+}
+.chat-form input[type="submit"] {
+    width: 58px;
+}
+.message {
+    border-bottom: 1px solid #333;
+    padding: 7px 4px;
+}
+.message .username {
+    font-weight: bold;
+}

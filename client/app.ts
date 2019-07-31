@@ -1,4 +1,5 @@
 import { sendMessage } from "./server.js";
+import { dummyData, formatMessage, printMessage } from './chat.js';
 declare var io: any;
 
 type Canvas = {
@@ -39,6 +40,11 @@ export function initialize(){
     document.addEventListener("keydown", (e) => { sendMessage(socket, handleInput(e)) }, false);
     socket.on('world', (state: World) => { world = state; });
     setInterval(() => update({canvas, ctx}, world, scale), 100, clientId);
+
+
+    // load chat messages (dummy data for now)
+    const chatMessages: HTMLElement[] = dummyData.map(msg => formatMessage(msg));
+    chatMessages.forEach(msg => printMessage(msg));
 }
 
 function update(c: Canvas, world: World, scale: number, clientId?: string) {
@@ -57,17 +63,17 @@ function drawGrid(c: Canvas, scale: number){
         c.ctx.stroke();
         c.ctx.closePath();
     }
-    
+
     var n = scale;
     while(true){
         if(n >= c.canvas.width && n >= c.canvas.height){
             break;
         }
 
-        if(scale < c.canvas.width){ 
+        if(scale < c.canvas.width){
             drawGridline(n, 0, n, c.canvas.height);
         }
-        if(scale < c.canvas.height){ 
+        if(scale < c.canvas.height){
             drawGridline(0, n, c.canvas.width, n);
         }
         n += scale;

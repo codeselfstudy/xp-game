@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-    <meta charset="utf-8"/>
     <head>
+        <meta charset="utf-8"/>
         <title>Experience Points</title>
         <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
         <script src="/static/dist/server.js" type="module"></script>
@@ -10,9 +10,21 @@
             * { padding: 0; margin: 0; }
             canvas { background: #eee; display: block; margin: 0 auto; }
         </style>
+        <link rel="stylesheet" href="/static/styles/main.css">
     </head>
     <body>
+        <noscript>This game requires JavaScript. Please turn on JavaScript.</noscript>
         <canvas id="canvas" width="480" height="320"></canvas>
+
+        <!-- Chat could be moved into canvas later, if needed. -->
+        <div id="chat">
+            <div class="messages" id="messages"></div>
+
+            <form class="chat-form">
+                <input type="text" placeholder="Enter a message">
+                <input type="submit" value="Send">
+            </form>
+        </div>
     </body>
 </html>
 
