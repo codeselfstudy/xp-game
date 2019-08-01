@@ -36,7 +36,10 @@ def handle_disconnect():
 
 @socketio.on('chat')
 def handle_chat(incoming):
-    """Respond to `chat` message from the frontend."""
+    """Respond to `chat` message from the frontend.
+
+    `incoming` is `{'body': 'the message content'}`.
+    """
     print('received chat message: ', incoming)
     outgoing = {
         'id': request.sid,
