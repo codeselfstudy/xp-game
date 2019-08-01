@@ -8,24 +8,24 @@ import {
 declare var io: any;
 
 type Canvas = {
-    canvas: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
-};
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D
+}
 
 type Action = "Up" | "Down" | "Left" | "Right";
 
-type Vector = { x: number; y: number };
+type Vector = { x: number, y: number }
 
 type World = {
-    width: number;
-    height: number;
-    entities: Entity[];
-};
+    width: number,
+    height: number,
+    entities: Entity[]
+}
 
 type Entity = {
-    position: Vector;
-    client_id: string;
-};
+    position: Vector,
+    client_id: string
+}
 
 export function initialize() {
     var socket = io("http://localhost:5000");
