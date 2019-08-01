@@ -40,7 +40,7 @@ export function initialize() {
     let world: World = {
         width: 100,
         height: 100,
-        entities: [],
+        entities: []
     };
     document.addEventListener("keydown", (e) => { sendAction(socket, handleInput(e)); }, false);
     socket.on("world", (state: World) => { world = state; });
