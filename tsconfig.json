@@ -6,6 +6,6 @@
     "outDir": "./static/dist/"
   },
   "include": [
-        "./client/**/*"
-    ]
+     "./client/**/*"
+  ]
 }

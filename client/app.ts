@@ -1,4 +1,10 @@
-import { sendMessage } from "./server.js";
+import { sendAction, sendChatMessage } from "./server.js";
+import {
+    chatData,
+    formatMessage,
+    printMessage,
+    initializeChatListener,
+} from "./chat.js";
 import { Vector, vector } from "./vectors.js"
 import * as Vec from "./vectors.js"
 
@@ -24,21 +30,29 @@ type Entity = {
 }
 
 export function initialize(){
-    var socket = io('http://localhost:5000');
-    socket.on('connect', () => {sendMessage(socket, "connected")});
+    var socket = io("http://localhost:5000");
+    socket.on("connect", () => {sendAction(socket, "connected");});
     let scale = 50;
-    const canvas = <HTMLCanvasElement>document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = <HTMLCanvasElement>document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
     let world: World = {
         width: 100,
         height: 100,
         entities: []
     };
-    document.addEventListener("keydown", (e) => { sendMessage(socket, handleInput(e)) }, false);
-    socket.on('world', (state: World) => {
+
+    document.addEventListener("keydown", (e) => { sendAction(socket, handleInput(e)); }, false);
+    socket.on("world", (state: World) => {
         world = state;
         update({canvas, ctx}, world, scale, socket.id);
     });
+
+    // Load chat messages from the initial data (if any)
+    const chatMessages: HTMLElement[] = chatData.map(msg => formatMessage(msg));
+    chatMessages.forEach(msg => printMessage(msg));
+
+    // Boot the chat system
+    initializeChatListener(socket);
 }
 
 function update(c: Canvas, world: World, scale: number, clientId?: string) {
@@ -49,10 +63,10 @@ function update(c: Canvas, world: World, scale: number, clientId?: string) {
     let viewOffset = Vec.subtract(cameraWorld, viewCenter);
     drawGrid(c, viewOffset, world.width, world.height, scale);
     world.entities.forEach((e) => {
-            let localPos = Vec.subtract(e.position, viewOffset);
-            let color = clientId == e.client_id ? "blue" : "red";
-            draw(c, localPos, color, scale);
-        });
+        let localPos = Vec.subtract(e.position, viewOffset);
+        let color = clientId == e.client_id ? "blue" : "red";
+        draw(c, localPos, color, scale);
+    });
 }
 
 
@@ -72,15 +86,16 @@ function drawGrid(c: Canvas, viewOffset: Vector, width: number, height: number, 
         c.ctx.fill();
         c.ctx.closePath();
     }
+
     var n = scale;
     while(true){
         if(n > c.canvas.width+scale && n > c.canvas.height+scale){
             break;
         }
-        if(scale < c.canvas.width){ 
+        if(scale < c.canvas.width){
             drawGridline(n, 0, n, c.canvas.height);
         }
-        if(scale < c.canvas.height){ 
+        if(scale < c.canvas.height){
             drawGridline(0, n, c.canvas.width, n);
         }
         let localN = Vec.add(vector((n/scale)-1, (n/scale)-1), viewOffset);
@@ -108,14 +123,13 @@ function handleInput(event: KeyboardEvent): Action | undefined {
         case "ArrowLeft":
             return "Left";
         case "ArrowRight":
-            return "Right"
+            return "Right";
         case "ArrowUp":
             return "Up";
         case "ArrowDown":
             return "Down";
     }
     return undefined;
-};
+}
 
-
-window.addEventListener('load', () => initialize())
+window.addEventListener("load", () => initialize());

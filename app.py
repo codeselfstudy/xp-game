@@ -14,10 +14,6 @@ def homepage():
     return render_template('index.html')
 
 
-@socketio.on('message')
-def handle_message(message):
-    print('received message: ' + message)
-
 
 @socketio.on('action')
 def handle_action(message):
@@ -36,6 +32,20 @@ def handle_connect():
 @socketio.on('disconnect')
 def handle_disconnect():
     ticker.client_disconnect(request.sid)
+
+
+@socketio.on('chat')
+def handle_chat(incoming):
+    """Respond to `chat` message from the frontend.
+
+    `incoming` is `{'body': 'the message content'}`.
+    """
+    print('received chat message: ', incoming)
+    outgoing = {
+        'id': request.sid,
+        **incoming,
+    }
+    socketio.emit('chat', outgoing)
 
 
 DEBUG_HOST = '127.0.0.1'
