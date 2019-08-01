@@ -14,7 +14,6 @@ def homepage():
     return render_template('index.html')
 
 
-
 @socketio.on('action')
 def handle_action(message):
     if 'action' not in message:
