@@ -1,4 +1,4 @@
-import { sendChatMessage } from './server.js';
+import { sendChatMessage } from "./server.js";
 
 // Represents a chat message
 interface Message {
@@ -15,8 +15,8 @@ export const chatData: Message[] = [];
  * message.
  */
 export function formatMessage(data: Message): HTMLElement {
-    const div = document.createElement('div');
-    div.classList.add('message');
+    const div = document.createElement("div");
+    div.classList.add("message");
     // TODO: a username or user ID would be better than a sliced random
     // ID here.
     div.innerHTML = `
@@ -31,7 +31,7 @@ export function formatMessage(data: Message): HTMLElement {
  * Take in a message's HTML element and append it to the DOM.
  */
 export function printMessage(message): void {
-    const messageOutputArea = document.getElementById('messages');
+    const messageOutputArea = document.getElementById("messages");
     messageOutputArea.appendChild(message);
 }
 
@@ -39,21 +39,21 @@ export function printMessage(message): void {
  * Send new messages
  */
 export function initializeChatListener(socket): void {
-    const chatForm: HTMLElement = document.getElementById('chatForm');
+    const chatForm: HTMLElement = document.getElementById("chatForm");
 
-    chatForm.addEventListener('submit', (e): void => {
+    chatForm.addEventListener("submit", (e): void => {
         e.preventDefault();
         const chatMessageInput = <HTMLInputElement>(
-            document.getElementById('chatMessageInput')
+            document.getElementById("chatMessageInput")
         );
         const chatMessage: string = chatMessageInput.value.trim();
-        chatMessageInput.value = '';
-        console.log('from form:', chatMessage);
+        chatMessageInput.value = "";
+        console.log("from form:", chatMessage);
         sendChatMessage(socket, chatMessage);
     });
 
-    socket.on('chat', (message): void => {
-        console.log('from server:', message);
+    socket.on("chat", (message): void => {
+        console.log("from server:", message);
         const messageHtml = formatMessage(message);
         printMessage(messageHtml);
     });

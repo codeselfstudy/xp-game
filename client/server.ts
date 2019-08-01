@@ -1,9 +1,9 @@
 export function sendAction(socket: any, message: string) {
-    socket.emit('action', { action: message });
+    socket.emit("action", { action: message });
 }
 
 export function sendChatMessage(socket: any, message: string) {
-    socket.emit('chat', {
+    socket.emit("chat", {
         body: message,
     });
 }

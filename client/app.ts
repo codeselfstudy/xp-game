@@ -1,10 +1,10 @@
-import { sendAction, sendChatMessage } from './server.js';
+import { sendAction, sendChatMessage } from "./server.js";
 import {
     chatData,
     formatMessage,
     printMessage,
     initializeChatListener,
-} from './chat.js';
+} from "./chat.js";
 declare var io: any;
 
 type Canvas = {
@@ -12,7 +12,7 @@ type Canvas = {
     ctx: CanvasRenderingContext2D;
 };
 
-type Action = 'Up' | 'Down' | 'Left' | 'Right';
+type Action = "Up" | "Down" | "Left" | "Right";
 
 type Vector = { x: number; y: number };
 
@@ -28,28 +28,28 @@ type Entity = {
 };
 
 export function initialize() {
-    var socket = io('http://localhost:5000');
+    var socket = io("http://localhost:5000");
     let clientId: string;
-    socket.on('connect', () => {
-        sendAction(socket, 'connected');
+    socket.on("connect", () => {
+        sendAction(socket, "connected");
         clientId = socket.id;
     });
     let scale = 50;
-    const canvas = <HTMLCanvasElement>document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = <HTMLCanvasElement>document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
     let world: World = {
         width: 100,
         height: 100,
         entities: [],
     };
     document.addEventListener(
-        'keydown',
+        "keydown",
         e => {
             sendAction(socket, handleInput(e));
         },
         false
     );
-    socket.on('world', (state: World) => {
+    socket.on("world", (state: World) => {
         world = state;
     });
     setInterval(() => update({ canvas, ctx }, world, scale), 100, clientId);
@@ -103,23 +103,23 @@ function draw(c: Canvas, thing: Entity, scale: number, clientId: string) {
         scale,
         scale
     );
-    c.ctx.fillStyle = clientId == thing.client_id ? 'blue' : 'red';
+    c.ctx.fillStyle = clientId == thing.client_id ? "blue" : "red";
     c.ctx.fill();
     c.ctx.closePath();
 }
 
 function handleInput(event: KeyboardEvent): Action | undefined {
     switch (event.key) {
-        case 'ArrowLeft':
-            return 'Left';
-        case 'ArrowRight':
-            return 'Right';
-        case 'ArrowUp':
-            return 'Up';
-        case 'ArrowDown':
-            return 'Down';
+        case "ArrowLeft":
+            return "Left";
+        case "ArrowRight":
+            return "Right";
+        case "ArrowUp":
+            return "Up";
+        case "ArrowDown":
+            return "Down";
     }
     return undefined;
 }
 
-window.addEventListener('load', () => initialize());
+window.addEventListener("load", () => initialize());
