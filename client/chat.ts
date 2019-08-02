@@ -8,7 +8,13 @@ interface Message {
 
 // If we need to pre-populate the chat with previous messages, they get
 // loaded from here.
-export const chatData: Message[] = [];
+export const chatData: Message[] = [
+    // TODO change or remove this initial chat message
+    {
+        id: 'system',
+        body: 'welcome'
+    }
+];
 
 /**
  * Take in a `Message` object and return an HTML element with the chat
@@ -21,7 +27,7 @@ export function formatMessage(data: Message): HTMLElement {
     // ID here.
     div.innerHTML = `
         <span class="username">${data.id.slice(
-            -5
+            -7
         )}</span> <span class="message-body">${data.body}</span>
     `;
     return div;
