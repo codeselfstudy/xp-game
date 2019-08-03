@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
+from server.sanitizer import sanitize
 import server.ticker as ticker
 
 app = Flask(__name__)
@@ -42,7 +43,7 @@ def handle_chat(incoming):
     print('received chat message: ', incoming)
     outgoing = {
         'id': request.sid,
-        **incoming,
+        'body': sanitize(incoming['body']),
     }
     socketio.emit('chat', outgoing)
 

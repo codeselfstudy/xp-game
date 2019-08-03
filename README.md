@@ -32,3 +32,7 @@ Register on the [Code Self Study](https://community.codeselfstudy.com/).
 Once registered, you can access the running todo list [here](https://community.codeselfstudy.com/t/rpg-project-todo-list/1713/5).
 
 There isn't a master design document, or a more concrete roadmap-- yet.  If you'd like to get involved in planning, please message bdjewkes on the forum.
+
+## Notes
+
+Be sure to sanitize user input. There is a Python module for that.
