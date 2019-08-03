@@ -8,7 +8,7 @@ import {
 import { vector } from "./vectors.js"
 import * as Vec from "./vectors.js"
 import { RenderContext, World, Entity, Action, ActionKind } from "./domain.js";
-import { drawRect, drawGrid } from "./draw.js"; 
+import { drawRect, drawGrid } from "./draw.js";
 
 declare var io: any;
 declare var server: any;
@@ -31,7 +31,7 @@ export function initialize(){
         let cameraWorld = player ? player.position : viewCenter;
         return {canvas, ctx, camera: {position: cameraWorld, viewOffset: viewCenter}};
     }
-    
+
     // TODO - move to an input handling module that can be initialized here
     document.addEventListener("keydown", (e) => {
         let input = handleKeyDown(e);
@@ -95,16 +95,21 @@ function handleKeyDown(event: KeyboardEvent): Action | undefined {
     let action: ActionKind = CTRL_DOWN ? "Attack" : "Move";
     switch (event.key) {
         case "Control":
+            event.preventDefault();
             console.log("key down");
             CTRL_DOWN = true
             break;
         case "ArrowLeft":
+            event.preventDefault();
             return { direction: "West", kind: action };
         case "ArrowRight":
+            event.preventDefault();
             return { direction: "East", kind: action };
         case "ArrowUp":
+            event.preventDefault();
             return { direction: "North", kind: action };
         case "ArrowDown":
+            event.preventDefault();
             return { direction: "South", kind: action };
     }
     return undefined;
