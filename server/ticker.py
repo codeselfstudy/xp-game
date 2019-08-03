@@ -1,7 +1,7 @@
 import queue
 import time
 from collections import defaultdict
-from typings import Callable, NoReturn
+from typing import Callable, NoReturn
 from .domain import Entity, Action, Vector, to_dict
 from .world import World
 from . import vectors as vec
@@ -55,7 +55,7 @@ def process_tick():
     for a in action_filter.values():
         actions[a.kind].append(a)
 
-    def perform_safe(func: Callable[NoReturn],
+    def perform_safe(func: Callable[[], NoReturn],
                      action: Action) -> (Entity, str):
         entity = game_state.get_entity_by_id(action.client_id)
         if entity:
