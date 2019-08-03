@@ -1,6 +1,7 @@
 import queue
 import time
 from collections import defaultdict
+from typings import Callable, NoReturn
 from .domain import Entity, Action, Vector, to_dict
 from .world import World
 from . import vectors as vec
@@ -54,19 +55,21 @@ def process_tick():
     for a in action_filter.values():
         actions[a.kind].append(a)
 
-    def action_args(action: Action) -> (Entity, str):
+    def perform_safe(func: Callable[NoReturn],
+                     action: Action) -> (Entity, str):
         entity = game_state.get_entity_by_id(action.client_id)
-        return entity, action.direction
+        if entity:
+            return func(entity, action.direction)
 
     # Process actions in order of Despawn -> Move -> Attack -> Spawn
     for a in actions.get('Despawn', []):
         despawn_entity(a.client_id)
 
     for a in actions.get('Move', []):
-        perform_move(*action_args(a))
+        perform_safe(perform_move, a)
 
     for a in actions.get('Attack', []):
-        perform_action(*action_args(a))
+        perform_safe(perform_action, a)
 
     for a in actions.get('Spawn', []):
         spawn_entity(a.client_id)

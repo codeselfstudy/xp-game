@@ -39,7 +39,6 @@ def handle_chat(incoming):
 
     `incoming` is `{'body': 'the message content'}`.
     """
-    print('received chat message: ', incoming)
     outgoing = {
         'id': request.sid,
         **incoming,
