@@ -15,7 +15,7 @@ declare var server: any;
 
 
 export function initialize(){
-    var socket = io();
+    var socket = io('/');
     let scale = 50;
     const canvas = <HTMLCanvasElement>document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
