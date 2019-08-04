@@ -1,14 +1,13 @@
 import { sendAction } from "./server.js";
 import {
     chatData,
-    formatMessage,
-    printMessage,
     initializeChatListener,
 } from "./chat.js";
+import { printMessage, EventType } from './eventBox.js';
 import { vector } from "./vectors.js"
 import * as Vec from "./vectors.js"
 import { RenderContext, World, Entity, Action, ActionKind } from "./domain.js";
-import { drawRect, drawGrid } from "./draw.js"; 
+import { drawRect, drawGrid } from "./draw.js";
 
 declare var io: any;
 declare var server: any;
@@ -31,7 +30,7 @@ export function initialize(){
         let cameraWorld = player ? player.position : viewCenter;
         return {canvas, ctx, camera: {position: cameraWorld, viewOffset: viewCenter}};
     }
-    
+
     // TODO - move to an input handling module that can be initialized here
     document.addEventListener("keydown", (e) => {
         let input = handleKeyDown(e);
@@ -46,8 +45,7 @@ export function initialize(){
         }
     });
     // Load chat messages from the initial data (if any)
-    const chatMessages: HTMLElement[] = chatData.map(msg => formatMessage(msg));
-    chatMessages.forEach(msg => printMessage(msg));
+    chatData.forEach(msg => printMessage(msg, EventType.ChatMessage));
 
     // Boot the chat system
     initializeChatListener(socket);

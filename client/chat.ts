@@ -1,7 +1,13 @@
+/**
+ * This module contains logic that deals with the chat functionality.
+ *
+ * Updating the DOM is handled in the eventBox module.
+ */
 import { sendChatMessage } from "./server.js";
+import { printMessage, EventType } from './eventBox.js';
 
 // Represents a chat message
-interface Message {
+export interface Message {
     id: string;
     body: string;
 }
@@ -12,34 +18,9 @@ export const chatData: Message[] = [
     // TODO change or remove this initial chat message
     {
         id: 'system',
-        body: 'welcome'
+        body: 'You are standing in a grid to the west of squares...'
     }
 ];
-
-/**
- * Take in a `Message` object and return an HTML element with the chat
- * message.
- */
-export function formatMessage(data: Message): HTMLElement {
-    const div = document.createElement("div");
-    div.classList.add("message");
-    // TODO: a username or user ID would be better than a sliced random
-    // ID here.
-    div.innerHTML = `
-        <span class="username">${data.id.slice(
-            -7
-        )}</span> <span class="message-body">${data.body}</span>
-    `;
-    return div;
-}
-
-/**
- * Take in a message's HTML element and append it to the DOM.
- */
-export function printMessage(message): void {
-    const messageOutputArea = document.getElementById("messages");
-    messageOutputArea.appendChild(message);
-}
 
 /**
  * Send new messages
@@ -60,7 +41,6 @@ export function initializeChatListener(socket): void {
 
     socket.on("chat", (message): void => {
         console.log("from server:", message);
-        const messageHtml = formatMessage(message);
-        printMessage(messageHtml);
+        printMessage(message, EventType.ChatMessage);
     });
 }
