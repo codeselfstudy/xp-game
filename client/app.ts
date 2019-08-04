@@ -11,8 +11,6 @@ import { RenderContext, World, Entity, Action, ActionKind } from "./domain.js";
 import { drawRect, drawGrid } from "./draw.js"; 
 
 declare var io: any;
-declare var server: any;
-
 
 export function initialize(){
     var socket = io('/');
