@@ -7,7 +7,7 @@ from .world import World
 from . import vectors as vec
 
 
-TICK_INTERVAL = 0.1
+TICK_INTERVAL = 1
 WORLD_WIDTH = 5
 WORLD_HEIGHT = 5
 
