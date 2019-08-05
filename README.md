@@ -29,7 +29,7 @@ This project's goal is to create a (not so massively) multiplayer RPG as a colla
 
 ## How to get invovled
 Register on the [Code Self Study](https://community.codeselfstudy.com/).
-Once registered, you can access the running todo list [here](https://community.codeselfstudy.com/t/rpg-project-todo-list/1713/5).
+Once registered, you can vist the [xp-game category](https://forum.codeselfstudy.com/c/projects/xp-game). Anyone is welcome to contribute, but please introduce yourself on the forum before opening a PR.
 
 There isn't a master design document, or a more concrete roadmap-- yet.  If you'd like to get involved in planning, please message bdjewkes on the forum.
 
