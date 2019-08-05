@@ -32,7 +32,7 @@ async function initialize(){
         return {
             canvas,
             ctx,
-            scale: 50,
+            scale: 32,
             camera: {position: cameraWorld, viewOffset: viewCenter},
             tileset
         };
