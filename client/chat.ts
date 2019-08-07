@@ -35,8 +35,9 @@ export function initializeChatListener(socket): void {
         );
         const chatMessage: string = chatMessageInput.value.trim();
         chatMessageInput.value = "";
-        console.log("from form:", chatMessage);
-        sendChatMessage(socket, chatMessage);
+        if (chatMessage) {
+            sendChatMessage(socket, chatMessage);
+        }
     });
 
     socket.on("chat", (message): void => {
