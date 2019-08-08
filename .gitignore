@@ -2,6 +2,10 @@
 /static/dist/
 /xp-game/
 
+# ignore the logs, except for the .keep file
+logs/*
+!logs/.keep
+
 # Editors
 *~
 tags

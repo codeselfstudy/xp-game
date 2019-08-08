@@ -2,7 +2,11 @@ import os
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
 from server.sanitizer import sanitize
+from server.logger import create_logger
 import server.ticker as ticker
+
+log = create_logger(__name__)
+log.game_event('created logger')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('GAME_SECRET', 'notarealsecret')
@@ -21,16 +25,19 @@ def homepage():
 @socketio.on('connect')
 def handle_connect():
     # Authentication can go here
-    pass
+    print('hi {}'.format(request.sid))
+    log.game_event('client_connected: {}'.format(request.sid))
 
 
 @socketio.on('disconnect')
 def handle_disconnect():
+    log.game_event('client_disconnected: {}'.format(request.sid))
     ticker.enqueue_action({'kind': 'Despawn'}, request.sid)
 
 
 @socketio.on('action')
 def handle_action(action):
+    log.game_event('action: {} by {}'.format(action, request.sid))
     ticker.enqueue_action(action, request.sid)
 
 
@@ -44,6 +51,7 @@ def handle_chat(incoming):
         'id': request.sid,
         'body': sanitize(incoming['body']),
     }
+    log.game_event('chat_message: {}'.format(outgoing))
     socketio.emit('chat', outgoing)
 
 
