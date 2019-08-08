@@ -4,8 +4,7 @@ from os import path
 from logging.handlers import RotatingFileHandler
 
 LOG_DIRECTORY = './logs'
-# MAX_LOG_FILESIZE = 100000000  # 100000000 bytes = 100 MB
-MAX_LOG_FILESIZE = 100  # a small number, for debug only
+MAX_LOG_FILESIZE = 100000000  # 100000000 bytes = 10 MB
 
 
 def create_logger(logger_name, fname='game.log'):
@@ -41,14 +40,15 @@ def create_logger(logger_name, fname='game.log'):
     logging.Logger.game_event = game_event
 
     logfile = path.join(LOG_DIRECTORY, fname)
-    print(f'initializing logger: {logfile}')
+    print(f'setting logfile to {logfile}')
 
-    logger = logging.getLogger(logfile)
+    logger = logging.getLogger(logger_name)
+    # GAME_EVENT level is above warning
     logger.setLevel(logging.WARNING)
 
     # add a rotating handler
-    handler = RotatingFileHandler(path,
+    handler = RotatingFileHandler(logfile,
                                   maxBytes=MAX_LOG_FILESIZE,
                                   backupCount=5)
     logger.addHandler(handler)
-    return logging.getLogger(logger_name)
+    return logger
