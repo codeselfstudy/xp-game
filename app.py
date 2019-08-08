@@ -41,7 +41,7 @@ def handle_chat(incoming):
     `incoming` is `{'body': 'the message content'}`.
     """
     trimmed_message = incoming['body'].strip()
-    if len(trimmed_message) > 0:
+    if trimmed_message:
         outgoing = {
             'id': request.sid,
             'body': sanitize(trimmed_message),
