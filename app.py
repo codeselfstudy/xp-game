@@ -40,11 +40,13 @@ def handle_chat(incoming):
 
     `incoming` is `{'body': 'the message content'}`.
     """
-    outgoing = {
-        'id': request.sid,
-        'body': sanitize(incoming['body']),
-    }
-    socketio.emit('chat', outgoing)
+    trimmed_message = incoming['body'].strip()
+    if trimmed_message:
+        outgoing = {
+            'id': request.sid,
+            'body': sanitize(trimmed_message),
+        }
+        socketio.emit('chat', outgoing)
 
 
 if __name__ == '__main__':
