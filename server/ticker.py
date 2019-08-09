@@ -3,14 +3,14 @@ import time
 from collections import defaultdict
 from typing import Callable
 from .domain import Entity, Action, Vector, to_dict
-from .world import World, LogicGrid, Tile
+from .world import World, LogicGrid
 from .environment import generate_random_map
 from . import vectors as vec
 
 
-TICK_INTERVAL = 1
+TICK_INTERVAL = 3
 WORLD_WIDTH = 10
-WORLD_HEIGHT = 10 
+WORLD_HEIGHT = 10
 
 action_queue = queue.Queue()
 
@@ -95,7 +95,7 @@ def perform_action(entity: Entity, direction: str, logic_grid: LogicGrid):
 
     loc = (logic_grid.get_location(target_pos)
            if logic_grid.world.in_bounds(target_pos) else None)
-    if loc.entity:
+    if loc and loc.entity:
         target = loc.entity
         result = (f"They strike {target.client_id[0:5]}, "
                   + "felling them in a single blow.")
