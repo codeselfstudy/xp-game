@@ -102,9 +102,10 @@ def perform_action(entity: Entity, direction: str, logic_grid: LogicGrid):
 
     loc = (logic_grid.get_location(target_pos)
            if logic_grid.world.in_bounds(target_pos) else None)
+
     if loc and loc.entity:
         target = loc.entity
-        result = (f"They strike {target.get_name()}, "
+        result = (f"They strike {user_data.get(target.client_id)}, "
                   + "dealing 1 damage.")
         target.health -= 1
     else:
