@@ -2,8 +2,9 @@ import queue
 import time
 from random import randint
 from collections import defaultdict
-from typing import Callable
-from .domain import Entity, Action, Vector, to_dict
+from typing import Callable, Dict
+from .utils import to_dict
+from .domain import Entity, Action, Vector
 from .world import World, LogicGrid
 from .environment import generate_random_map
 from . import vectors as vec
@@ -24,11 +25,12 @@ game_state = World(
 
 
 socket_server = None
+user_map: Dict[str, str]
 
 
-def emit(channel, data):
+def emit(channel, data, room=None):
     if socket_server:
-        socket_server.emit(channel, to_dict(data))
+        socket_server.emit(channel, to_dict(data), room=room)
 
 
 def enqueue_action(action_message, client_id):
@@ -47,7 +49,7 @@ def enqueue_action(action_message, client_id):
 
 
 def process_tick():
-    action_filter = {}
+    action_filter: dict[str, Action] = {}
     while not action_queue.empty():
         # filter to a single action per user
         a = action_queue.get(block=True)
@@ -111,7 +113,7 @@ def perform_action(entity: Entity, direction: str, logic_grid: LogicGrid):
     event = {
         'id': "",
         # TODO - replace the sliced client id with a name
-        'body': f"""{entity.get_name()} swings their vorpal """
+        'body': f"""{user_data.get(entity.client_id)} swings their vorpal """
                 f"""sword to the {direction}. {result}"""
     }
     socket_server.emit('chat', event)
@@ -132,16 +134,18 @@ def despawn_entity(client_id):
     entity = game_state.get_entity_by_id(client_id)
     if entity:
         game_state.entities.remove(entity)
+        emit('despawn', {})
 
 
-def run_ticker(socketio):
+def run_ticker(socketio, user_map):
     """
     Main game loop; loop fires every TICK_INTERVAL, updates game state,
     and broadcasts the update to clients
     """
     global socket_server
-    global game_state
+    global user_data
     socket_server = socketio
+    user_data = user_map
     tick = 0
     while(True):
         time.sleep(TICK_INTERVAL)
