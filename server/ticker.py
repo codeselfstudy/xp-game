@@ -135,7 +135,7 @@ def despawn_entity(client_id):
     entity = game_state.get_entity_by_id(client_id)
     if entity:
         game_state.entities.remove(entity)
-        emit('despawn', {})
+        emit('despawn', {}, room=client_id)
 
 
 def run_ticker(socketio, user_map):
