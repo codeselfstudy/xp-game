@@ -25,7 +25,6 @@ def homepage():
 @socketio.on('connect')
 def handle_connect():
     # Authentication can go here
-    print('hi {}'.format(request.sid))
     log.game_event('client_connected: {}'.format(request.sid))
 
 
