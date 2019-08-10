@@ -25,7 +25,7 @@ async function initialize(){
     }
 
     socket.on('connect', () => respawn());
-    socket.on('despwan', () => respawn());
+    socket.on('despawn', () => respawn());
         
     const canvas = <HTMLCanvasElement>document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
