@@ -32,7 +32,7 @@ def handle_connect():
     # Authentication can go here
     log.game_event(f'client_connected: {request.sid}')
 
-
+    
 @socketio.on('disconnect')
 def handle_disconnect():
     log.game_event(f'client_disconnected: {request.sid}')

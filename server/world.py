@@ -74,12 +74,13 @@ class LogicGrid:
         return LogicGrid(grid=grid, world=world)
 
     def is_passable(self, position: Vector):
-        location = self.get_location(position)
-        return (self.world.in_bounds(position)
-                and not location.tile.is_dense
-                and not location.entity)
+        if self.world.in_bounds(position):
+            location = self.get_location(position)
+            return (not location.tile.is_dense
+                    and not location.entity)
+        return False
 
-    def get_location(self, position: Location):
+    def get_location(self, position: Vector) -> Location:
         return self.grid[position.y][position.x]
 
     def move_entity(self, entity: Entity, destination: Vector) -> bool:

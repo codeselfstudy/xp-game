@@ -1,5 +1,6 @@
 import queue
 import time
+from random import randint
 from collections import defaultdict
 from typing import Callable, Dict
 from .utils import to_dict
@@ -122,7 +123,9 @@ def spawn_entity(client_id):
     # despawn any existing entity for the client_id
     despawn_entity(client_id)
     # create an entity identified by the given client_id
-    game_state.entities.append(Entity(position=Vector(0, 0),
+    x_pos = randint(0, WORLD_WIDTH-1)
+    y_pos = randint(0, WORLD_HEIGHT-1)
+    game_state.entities.append(Entity(position=Vector(x_pos, y_pos),
                                       client_id=client_id,
                                       health=5))
 
