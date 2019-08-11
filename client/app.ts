@@ -3,11 +3,12 @@ import { chatData, initializeChatListener } from "./chat.js";
 import { printMessage, EventType } from './eventBox.js';
 import { vector, Vector } from "./vectors.js"
 import * as Vec from "./vectors.js"
-import { RenderContext, World, Entity, Action, ActionKind } from "./domain.js";
-import { drawRect, drawGrid, drawTile } from "./draw.js"; 
+import { RenderContext, World, Entity, Action } from "./domain.js";
+import { drawRect, drawGrid, drawTile } from "./draw.js";
 import { getTileset } from "./tileset.js";
 import { setHealth, setUsername } from "./stats.js";
 import { sanitize } from "./sanitizer.js";
+import { handleKeyDown, handleKeyUp, handleKeyPress } from "./inputs.js";
 
 declare var io: any;
 
@@ -26,7 +27,7 @@ async function initialize(){
 
     socket.on('connect', () => respawn());
     socket.on('despawn', () => respawn());
-        
+
     const canvas = <HTMLCanvasElement>document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     let world: World = {
@@ -48,12 +49,13 @@ async function initialize(){
         };
     };
 
-    // TODO - move to an input handling module that can be initialized here
     document.addEventListener("keydown", (e) => {
         let input = handleKeyDown(e);
         if(input){sendAction(socket, input)}
     }, false);
+    document.addEventListener("keyup", (e) => { handleKeyUp(e) });
     document.addEventListener("keypress", handleKeyPress, false);
+
     socket.on('world', (state: World) => {
         world = state;
         render(getRenderContext(), world);
@@ -96,7 +98,7 @@ function render(c: RenderContext, world: World) {
                 && worldPos.y >= 0 && worldPos.y < world.height;
             let tileId = inBounds ? world.tile_grid[worldPos.y][worldPos.x].tile_id : "ground";
             drawTile(c, {x, y}, tileId);
-            
+
         }
     }
     // layer 2: gridlines
@@ -117,40 +119,6 @@ function render(c: RenderContext, world: World) {
     });
 }
 
-
-// TODO - move to an input module
-let ATK_PRESSED = false;
-function handleKeyPress(event: KeyboardEvent){
-    switch (event.key){
-        case "a":
-        case "A":
-            ATK_PRESSED = true;
-            break;
-    }
-}
-
-function handleKeyDown(event: KeyboardEvent): Action | undefined {
-    // if the attack button has been pressed, set the action to Attack
-    // and clear the ATK_PRESSED input state 
-    let action: ActionKind = ATK_PRESSED ? "Attack" : "Move";
-    ATK_PRESSED = false;
-
-    switch (event.key) {
-        case "ArrowLeft":
-            event.preventDefault();
-            return { direction: "West", kind: action };
-        case "ArrowRight":
-            event.preventDefault();
-            return { direction: "East", kind: action };
-        case "ArrowUp":
-            event.preventDefault();
-            return { direction: "North", kind: action };
-        case "ArrowDown":
-            event.preventDefault();
-            return { direction: "South", kind: action };
-    }
-    return undefined;
-}
 
 /**
  * Present the user with a prompt to enter a user name.  On a valid submission,

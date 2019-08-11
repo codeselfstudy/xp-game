@@ -61,11 +61,12 @@
     height: 48px;
 }
 .chat-form input[type="text"] {
-    width: 400px;
+    /* width: 400px; */
+    width: 740px;
     padding-left: 7px;
 }
-.chat-form input[type="submit"] {
-    width: 58px;
+.chat-form input:focus {
+    background-color: lightyellow;
 }
 
 #login {
