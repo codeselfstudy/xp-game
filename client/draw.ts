@@ -53,7 +53,7 @@ export function drawTile(c: RenderContext, position: Vector, tileId: string){
             case "grass":
                 return 6;
             case "tree":
-                return 36;
+                return 37;
             case "hero":
                 return 27;
 
