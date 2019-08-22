@@ -107,7 +107,7 @@ function render(c: RenderContext, world: World) {
             let dir = Vec.dirToVec(e.currentAction.action.direction);
             let range = e.currentAction.ability.reach;
             for(var i = 1; i <= range; i++){
-                let actionTarget = Vec.add(e.position, Vec.multiply(dir, i)) 
+                let actionTarget = Vec.add(e.position, Vec.multiply(dir, i))
                 drawRect(c, worldToView(actionTarget), {strokeColor: e.currentAction.ability.color});
             }
         }

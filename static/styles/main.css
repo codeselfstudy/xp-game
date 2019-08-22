@@ -50,6 +50,11 @@ th.wide {
     margin: 17px auto;
 }
 
+.stats {
+    font-family: sans-serif;
+    font-size: 1rem;
+}
+
 .text {
     font-family: monospace;
     color: #333;

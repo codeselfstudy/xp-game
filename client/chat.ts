@@ -18,7 +18,7 @@ export const chatData: Message[] = [
     // TODO change or remove this initial chat message
     {
         id: 'system',
-        body: 'You are standing in a grid to the west of squares...'
+        body: 'You find yourself in a verdant forest...'
     }
 ];
 
