@@ -2,6 +2,7 @@ import os
 from typing import Dict
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
+from random import randint
 from server.sanitizer import sanitize
 from server.logger import create_logger
 import server.ticker as ticker
@@ -24,8 +25,15 @@ client_names: Dict[str, str] = {}
 
 @app.route('/')
 def homepage():
-    """Render the index.html file that contains the frontend application."""
-    return render_template('index.html')
+    """Render the index.html file that contains the frontend application.
+
+    It also creates a random string to bust the cache on page reloads.
+    """
+    rnd_string = hex(randint(1000000, 10000000))[2:]
+    data = {
+        'cache_buster': f'?rnd={rnd_string}'
+    }
+    return render_template('index.html', data=data)
 
 
 @socketio.on('connect')
