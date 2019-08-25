@@ -2,13 +2,13 @@ import os
 from typing import Dict
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
-from random import randint
 from server.sanitizer import sanitize
 from server.logger import create_logger
 import server.ticker as ticker
 from server.domain import ClientEvent
 from server.utils import from_dict
 from server.actions import allowed_actions
+from server.assets import cache_buster
 
 
 log = create_logger(__name__)
@@ -22,6 +22,10 @@ PORT = os.environ.get('GAME_PORT', 5000)
 socketio = SocketIO(app)
 client_names: Dict[str, str] = {}
 
+# This query string can be appended to any static assets in the
+# template.
+cache_busting_query = cache_buster()
+
 
 @app.route('/')
 def homepage():
@@ -29,9 +33,8 @@ def homepage():
 
     It also creates a random string to bust the cache on page reloads.
     """
-    rnd_string = hex(randint(1000000, 10000000))[2:]
     data = {
-        'cache_buster': f'?rnd={rnd_string}'
+        'cache_buster': cache_busting_query
     }
     return render_template('index.html', data=data)
 
