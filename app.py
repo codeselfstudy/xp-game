@@ -29,10 +29,7 @@ cache_busting_query = cache_buster()
 
 @app.route('/')
 def homepage():
-    """Render the index.html file that contains the frontend application.
-
-    It also creates a random string to bust the cache on page reloads.
-    """
+    """Render the index.html file with the frontend application."""
     data = {
         'cache_buster': cache_busting_query
     }
