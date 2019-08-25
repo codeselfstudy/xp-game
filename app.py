@@ -8,6 +8,7 @@ import server.ticker as ticker
 from server.domain import ClientEvent
 from server.utils import from_dict
 from server.actions import allowed_actions
+from server.assets import cache_buster
 
 
 log = create_logger(__name__)
@@ -21,11 +22,18 @@ PORT = os.environ.get('GAME_PORT', 5000)
 socketio = SocketIO(app)
 client_names: Dict[str, str] = {}
 
+# This query string can be appended to any static assets in the
+# template.
+cache_busting_query = cache_buster()
+
 
 @app.route('/')
 def homepage():
-    """Render the index.html file that contains the frontend application."""
-    return render_template('index.html')
+    """Render the index.html file with the frontend application."""
+    data = {
+        'cache_buster': cache_busting_query
+    }
+    return render_template('index.html', data=data)
 
 
 @socketio.on('connect')
