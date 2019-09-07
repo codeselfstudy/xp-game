@@ -16,12 +16,19 @@ async function initialize(){
     // TODO: loading tiles blocks initialization; put this behind a load screen?
     const tileset = await getTileset();
     var socket = io('/');
-    initializeInputListeners((input) => sendAction(socket, input));
+    let [subscribeInputListeners,
+         unsubscribeInputListeners] = initializeInputListeners((input) => sendAction(socket, input));
+
     function respawn(){
+        // disable input events
+        unsubscribeInputListeners();
         handleLogin(name => {
             setUsername(name);
             setHealth(0);
             requestLogin(socket, name);
+            setTimeout(() => {
+                subscribeInputListeners();
+            }, 500);
         });
     }
 
@@ -125,16 +132,16 @@ function handleLogin(onLogin: (name: string) => void){
     loginDiv.style.display = null;
     const loginForm: HTMLElement = document.getElementById("loginForm");
     function subscribe(e: Event){
-        e.preventDefault()
+        e.preventDefault();
         const loginFormMessageInput = <HTMLInputElement>document.getElementById("loginFormInput");
         const name: string = sanitize(loginFormMessageInput.value.trim());
         if(name){
-            loginForm.removeEventListener("submit", subscribe)
+            loginForm.removeEventListener("submit", subscribe);
             loginDiv.style.display = "none";
             onLogin(name);
         }
     }
-    loginForm.addEventListener("submit", subscribe)
+    loginForm.addEventListener("submit", subscribe);
 }
 
 
