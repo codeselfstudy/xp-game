@@ -18,17 +18,16 @@ async function initialize(){
     var socket = io('/');
     // this could return a subscribe function and an unsubscribe
     let [subscribeInputListeners,
-        unsubscribeInputListners] = initializeInputListeners((input) => sendAction(socket, input));
+         unsubscribeInputListeners] = initializeInputListeners((input) => sendAction(socket, input));
 
     function respawn(){
         // disable input events
-        unsubscribeInputListeners()
+        unsubscribeInputListeners();
         handleLogin(name => {
             setUsername(name);
             setHealth(0);
             requestLogin(socket, name);
-            subscribeInputListners()
-
+            subscribeInputListeners();
         });
     }
 

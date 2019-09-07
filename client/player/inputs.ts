@@ -11,22 +11,38 @@ let KeyBindings = new Map<string, ActionKind>([
 
 export function initializeInputListeners(keyDownCallback: (arg: Action) => void) {
     let secondaryInput: { key: ActionKind | undefined } = { key: undefined };
-    document.addEventListener("keydown", (e) => {
-        if (isChatFocused()) {
-            return;
-        }
+
+    // These are extracted so that removeEventListener shape matches
+    // addEventListener.
+    function _handleKeydown(e) {
+        if (isChatFocused()) { return; }
         let input = handleKeyDown(e, secondaryInput);
-        if(input){
-            keyDownCallback(input);
-        }
-    }, false);
-    document.addEventListener("keypress", (e) => {
-        if (isChatFocused()) {
-            return;
-        }
+        if(input){ keyDownCallback(input); }
+    }
+
+    function _handleKeypress(e) {
+        if (isChatFocused()) { return; }
         secondaryInput.key = handleKeyPress(e);
-    }, false);
-    document.addEventListener("keyup", focusChat);
+    }
+
+    function subscribeInputListeners() {
+        console.log('subscribeInputListners');
+        document.addEventListener("keydown", _handleKeydown, false);
+        document.addEventListener("keypress", _handleKeypress, false);
+        document.addEventListener("keyup", focusChat);
+    }
+
+    function unsubscribeInputListeners() {
+        console.log('unsubscribeInputListeners');
+        document.removeEventListener("keydown", _handleKeydown, false);
+        document.removeEventListener("keypress", _handleKeypress, false);
+        document.removeEventListener("keyup", focusChat);
+    }
+
+    return [
+        subscribeInputListeners,
+        unsubscribeInputListeners,
+    ];
 }
 
 function isChatFocused() {
