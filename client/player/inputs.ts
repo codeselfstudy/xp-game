@@ -26,14 +26,12 @@ export function initializeInputListeners(keyDownCallback: (arg: Action) => void)
     }
 
     function subscribeInputListeners() {
-        console.log('subscribeInputListners');
         document.addEventListener("keydown", _handleKeydown, false);
         document.addEventListener("keypress", _handleKeypress, false);
         document.addEventListener("keyup", focusChat);
     }
 
     function unsubscribeInputListeners() {
-        console.log('unsubscribeInputListeners');
         document.removeEventListener("keydown", _handleKeydown, false);
         document.removeEventListener("keypress", _handleKeypress, false);
         document.removeEventListener("keyup", focusChat);

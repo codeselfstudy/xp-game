@@ -16,7 +16,6 @@ async function initialize(){
     // TODO: loading tiles blocks initialization; put this behind a load screen?
     const tileset = await getTileset();
     var socket = io('/');
-    // this could return a subscribe function and an unsubscribe
     let [subscribeInputListeners,
          unsubscribeInputListeners] = initializeInputListeners((input) => sendAction(socket, input));
 
