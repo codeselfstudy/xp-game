@@ -27,7 +27,9 @@ async function initialize(){
             setUsername(name);
             setHealth(0);
             requestLogin(socket, name);
-            subscribeInputListeners();
+            setTimeout(() => {
+                subscribeInputListeners();
+            }, 500);
         });
     }
 
