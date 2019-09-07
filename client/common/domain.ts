@@ -16,7 +16,7 @@ export type RenderContext = {
     tileset: Tileset;
 }
 
-export type ActionKind = "Move" | "Attack" | "Spawn" | "Dash" | "Aimed Shot"; 
+export type ActionKind = "Move" | "Attack" | "Spawn" | "Dash" | "Aimed Shot";
 
 export type Action = {
     entity_id?: string;
@@ -26,7 +26,7 @@ export type Action = {
 
 export type Ability = {
     color: string;
-    reach: number; 
+    reach: number;
 }
 
 
