@@ -52,3 +52,7 @@ def create_logger(logger_name, fname='game.log'):
                                   backupCount=5)
     logger.addHandler(handler)
     return logger
+
+
+log = create_logger(__name__)
+log.game_event('created logger')

@@ -21,3 +21,4 @@ def from_dict(data: Dict, to_type):
     except Exception:
         log.exception("Unable to parse client event")
     return None
+    

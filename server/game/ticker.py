@@ -3,7 +3,8 @@ import time
 from random import randint
 from typing import Dict, Optional, Tuple, List
 from utilities.serialize import to_dict
-from common.messages import Action
+from utilities.logger import log
+from common.messages import Action, ClientEvent
 from .entity import Entity
 from .vectors import Vector
 from .world import World, LogicGrid
@@ -37,23 +38,19 @@ def emit(channel, data, room=None):
         socket_server.emit(channel, to_dict(data), room=room)
 
 
-def enqueue_client_message(message: Dict[str, str], client_id: str):
+def enqueue_client_message(event: ClientEvent, client_id: str):
     """
     Formats a message from the client into an `Action` object, to be placed
     on the action_queue. Messages to spawn/despawn are processed immediately
     """
-    if not message or 'kind' not in message:
-        return
-    kind = message['kind']
-    if kind == 'Despawn':
-        despawn_entity(client_id)
-        return
-    if kind == 'Spawn':
+    if event.event_type == ClientEvent.EVENT_TYPE_SPAWN:
         spawn_entity(client_id)
         return
-    action = Action(entity_id=client_id, kind=kind,
-                    direction=message.get('direction', ""))
-    enqueue_action(action, None)
+    if event.event_type == ClientEvent.EVENT_TYPE_ACTION:
+        enqueue_action(event.data, None)
+        return
+
+    log.debug(f"Received unhandled event {event}")
 
 
 def enqueue_action(action: Action,

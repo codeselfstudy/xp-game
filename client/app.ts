@@ -1,6 +1,6 @@
 import { vector, Vector } from "./common/vectors.js";
 import * as Vec from "./common/vectors.js";
-import { sendAction, requestLogin } from "./common/server.js";
+import { sendMessage } from "./common/server.js";
 import { RenderContext, World, Ability, Action } from "./common/domain.js";
 import { chatData, initializeChatListener } from "./player/chat.js";
 import { printMessage, EventType } from './player/eventBox.js';
@@ -17,7 +17,7 @@ async function initialize(){
     const tileset = await getTileset();
     var socket = io('/');
     let [subscribeInputListeners,
-         unsubscribeInputListeners] = initializeInputListeners((input) => sendAction(socket, input));
+         unsubscribeInputListeners] = initializeInputListeners((input) => sendMessage(socket, "action", input));
 
     function respawn(){
         // disable input events
@@ -25,13 +25,16 @@ async function initialize(){
         handleLogin(name => {
             setUsername(name);
             setHealth(0);
-            requestLogin(socket, name);
+            sendMessage(socket, "spawn", { character_name: name });
             setTimeout(() => {
                 subscribeInputListeners();
             }, 500);
         });
     }
 
+    /* when the client receives a message on either the connect
+    or the despawn channels, they respawn immediately
+    */
     socket.on('connect', () => respawn());
     socket.on('despawn', () => respawn());
 

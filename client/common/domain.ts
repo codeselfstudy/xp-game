@@ -1,5 +1,6 @@
 import { Vector, Direction } from "./vectors";
 
+
 export interface Tileset {
     tileWidth: number;
     tileHeight: number;
@@ -15,6 +16,7 @@ export type RenderContext = {
     scale: number;
     tileset: Tileset;
 }
+
 
 export type ActionKind = "Move" | "Attack" | "Spawn" | "Dash" | "Aimed Shot";
 

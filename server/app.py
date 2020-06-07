@@ -4,13 +4,9 @@ from flask import Flask, request, render_template
 from flask_socketio import SocketIO
 from web.sanitizer import sanitize
 from web.assets import cache_buster
-from utilities.logger import create_logger
-from utilities.serialize import from_dict
-from common.messages import ClientEvent
+from utilities.logger import log
+from common.messages import ClientEvent, deserialize_client_event
 import game.ticker as ticker
-
-log = create_logger(__name__)
-log.game_event('created logger')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('GAME_SECRET', 'notarealsecret')
@@ -20,8 +16,6 @@ PORT = os.environ.get('GAME_PORT', 5000)
 socketio = SocketIO(app)
 client_names: Dict[str, str] = {}
 
-# This query string can be appended to any static assets in the
-# template.
 cache_busting_query = cache_buster()
 
 
@@ -43,7 +37,7 @@ def handle_connect():
 @socketio.on('disconnect')
 def handle_disconnect():
     log.game_event(f'client_disconnected: {request.sid}')
-    ticker.enqueue_client_message({'kind': 'Despawn'}, request.sid)
+    ticker.despawn_entity(request.sid)
 
 
 @socketio.on('event')
@@ -52,18 +46,18 @@ def handle_event(event_dict):
     Events are of the format { kind: str, data: {...}}
     """
     global client_names
-    event = from_dict(event_dict, ClientEvent)
-
-    if event and event.kind == ClientEvent.LOGIN_EVENT_KIND:
-        # TODO-- get from_dict to parse recursively
-        client_names[request.sid] = event.detail['character_name']
-        ticker.enqueue_client_message({'kind': 'Spawn'}, request.sid)
-
-
-@socketio.on('action')
-def handle_action(action):
-    log.game_event(f'action: {action} by {request.sid}')
-    ticker.enqueue_client_message(action, request.sid)
+    try:
+        event = deserialize_client_event(event_dict, request.sid)
+    except Exception:
+        log.exception("Failed to deserialize client event")
+        return
+    if event.event_type == ClientEvent.EVENT_TYPE_SPAWN:
+        client_names[request.sid] = event.data.character_name
+        log.game_event(f'{request.sid} spawned as {event.data.character_name}')
+        ticker.enqueue_client_message(event, request.sid)
+    else:
+        log.game_event(f'action: {event.data.kind} by {request.sid}')
+        ticker.enqueue_client_message(event, request.sid)
 
 
 @socketio.on('chat')
@@ -72,6 +66,7 @@ def handle_chat(incoming):
 
     `incoming` is `{'body': 'the message content'}`.
     """
+    print(client_names)
     trimmed_message = incoming['body'].strip()
     if trimmed_message:
         outgoing = {

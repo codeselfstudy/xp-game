@@ -1,20 +1,16 @@
 import { Action } from "./domain.js";
 
+type EventType = "spawn" | "action" | "chat";
+
 type ClientEvent = {
-    kind: "login" 
-    detail:  {character_name: string}
+    event_type: EventType
+    data:  {character_name: string} | Action
 }
 
-export function sendAction(socket: any, action: Action){
-    socket.emit('action', action);
-}
-
-export function requestLogin(socket: any, username: string){
-    let event: ClientEvent ={
-        kind: "login",
-        detail: {
-            character_name: username
-        }
+export function sendMessage(socket: any, eventType: EventType, message: Action | { character_name: string }){
+    let event: ClientEvent = {
+        event_type: eventType,
+        data: message
     };
     socket.emit('event', event);
 }
